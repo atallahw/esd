@@ -234,8 +234,8 @@ int main(int argc, char **argv)
 	int ii;
 	for ( ii = 0; ii < N_SAMPLES; ii++)
 	{
-		t[ii] = (t_b[ii] + t_a[ii])/2.0;
-		//printf("%lf\n",t_b[i]);
+		t[i] = (t_b[i] + t_a[i])/2.0;
+		printf("%lf\n",t_b[i]);
 
 	}
 	P_i = (float *) malloc(sizeof(float) * N_SAMPLES);

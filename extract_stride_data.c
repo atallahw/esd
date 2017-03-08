@@ -235,15 +235,11 @@ int main(int argc, char **argv)
 	for ( ii = 0; ii < N_SAMPLES; ii++)
 	{
 		t[ii] = (t_b[ii] + t_a[ii])/2.0;
-<<<<<<< HEAD
-
-=======
 		printf("t_b:%lf\n",t_b[ii]);
 		printf("t_a:%lf\n",t_a[ii]);
 		printf("t:%lf\n",t[ii]);
->>>>>>> 3f99c6f92168d4466b529272790e5c690d305ba5
-
 	}
+
 	P_i = (float *) malloc(sizeof(float) * N_SAMPLES);
 	T_i = (float *) malloc(sizeof(float) * N_SAMPLES);
 	rv = find_peaks_and_troughs(

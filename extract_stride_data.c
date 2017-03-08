@@ -211,7 +211,7 @@ int main(int argc, char **argv)
 	
 	while ((read = getline(&line, &len, fp)) != -1) {
 		/* parse the data */
-		rv = sscanf(line, "%lf,%lf,%f,%f,%f,%f,%f,%f\n", &t_b[i], &t_a[i], &x_ac[i], &y_ac[i],&z_ac[i],&x_gy[i], &y_gy[i], &z_gy[i]);
+		rv = sscanf(line, "%f,%f,%f,%f,%f,%f,%f,%f\n", &t_b[i], &t_a[i], &x_ac[i], &y_ac[i],&z_ac[i],&x_gy[i], &y_gy[i], &z_gy[i]);
 		if (rv != 8) {
 			fprintf(stderr,
 					"%s %d \'%s\'. %s.\n",
@@ -235,7 +235,7 @@ int main(int argc, char **argv)
 	for ( ii = 0; ii < N_SAMPLES; ii++)
 	{
 		t[ii] = (t_b[ii] + t_a[ii])/2.0;
-		//printf("%lf\n",t_b[i]);
+
 
 	}
 	P_i = (float *) malloc(sizeof(float) * N_SAMPLES);
@@ -355,15 +355,15 @@ int main(int argc, char **argv)
 		idx = (int) S_i[i];
 		idx_min = (int) S_min[i];
 		idx_next = (int) S_i[i+1];
-		//((i+1)!=n_S)? period = t[idx_next]- t[idx]: period;
-		fprintf(fp, "%d,%20.10lf,%lf,%d,%20.10lf,%lf\n",
+		((i+1)!=n_S)? period = t[idx_next]- t[idx]: period;
+		fprintf(fp, "%d,%20.10lf,%f,%d,%20.10lf,%lf,%lf\n",
 				idx,
 				t[idx],
 				x_ac[idx],			//x
 				idx_min,
 				t[idx_min],
-                                x_ac[idx_min]                          /////
-				//period
+                                x_ac[idx_min],                          /////
+				period
 		       );
 	}
 	fclose(fp);

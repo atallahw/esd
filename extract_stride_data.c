@@ -122,7 +122,7 @@ int main(int argc, char **argv)
 	int N_SAMPLES;
 
 	/* Variables for storing the data and storing the return values */
-	float *t, *x, *y, *z; 	// variables for data collected from input file
+	float *t,*t_b, *t_a, *x_ac, *y_ac, *z_ac, *x_gy, *y_gy, *z_gy; 	// variables for data collected from input file
 	float pk_threshold;	// pk-threshold value
        	/* Variables for peak-trough detection */	
 	float *P_i; 	// indicies of each peak found by peak detection
@@ -200,13 +200,19 @@ int main(int argc, char **argv)
 	/* start reading the data from the file into the data structures */
 	i = 0;
 	t = (float *) malloc(sizeof(float) * N_SAMPLES);
-	x = (float *) malloc(sizeof(float) * N_SAMPLES);
-	y = (float *) malloc(sizeof(float) * N_SAMPLES);
-	z = (float *) malloc(sizeof(float) * N_SAMPLES);
+	t_b = (float *) malloc(sizeof(float) * N_SAMPLES);
+	t_a = (float *) malloc(sizeof(float) * N_SAMPLES);
+	x_ac = (float *) malloc(sizeof(float) * N_SAMPLES);
+	y_ac = (float *) malloc(sizeof(float) * N_SAMPLES);
+	z_ac = (float *) malloc(sizeof(float) * N_SAMPLES);
+	x_gy = (float *) malloc(sizeof(float) * N_SAMPLES);
+	y_gy = (float *) malloc(sizeof(float) * N_SAMPLES);
+	z_gy = (float *) malloc(sizeof(float) * N_SAMPLES);
+	
 	while ((read = getline(&line, &len, fp)) != -1) {
 		/* parse the data */
-		rv = sscanf(line, "%f,%f,%f,%f\n", &t[i], &x[i], &y[i], &z[i]);
-		if (rv != 4) {
+		rv = sscanf(line, "%lf,%lf,%f,%f,%f,%f,%f,%f\n", &t_b[i], &t_a[i], &x_ac[i], &y_ac[i],&z_ac[i],&x_gy[i], &y_gy[i], &z_gy[i]);
+		if (rv != 8) {
 			fprintf(stderr,
 					"%s %d \'%s\'. %s.\n",
 					"Failed to read line",
@@ -225,10 +231,17 @@ int main(int argc, char **argv)
 	 * find indicies of peaks
 	 * find indicies of troughs
 	 */
+	int ii;
+	for ( ii = 0; ii < N_SAMPLES; ii++)
+	{
+		t[i] = (t_b[i] + t_a[i])/2.0;
+		printf("%lf\n",t_b[i]);
+
+	}
 	P_i = (float *) malloc(sizeof(float) * N_SAMPLES);
 	T_i = (float *) malloc(sizeof(float) * N_SAMPLES);
 	rv = find_peaks_and_troughs(
-			x,                               //x
+			x_ac,                               //x
 			N_SAMPLES, 
 			pk_threshold, 
 			P_i, T_i, 
@@ -305,7 +318,7 @@ int main(int argc, char **argv)
 			fprintf(fp, "%d,%20.10lf,%lf,",
 					idx,
 					t[idx],
-					x[idx]               //x
+					x_ac[idx]               //x
 			       );
 		} else {
 			fprintf(fp, ",,,");
@@ -316,7 +329,7 @@ int main(int argc, char **argv)
 			fprintf(fp, "%d,%20.10lf,%lf\n",
 					idx,
 					t[idx],
-					x[idx]                //x
+					x_ac[idx]                //x
 			       );
 		} else {
 			fprintf(fp, ",,\n");
@@ -335,17 +348,22 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
         int idx_min;  //////
-	fprintf(fp, "S_i,S_t,S_x,S_min\n");                      //x
+	int period;
+	int idx_next;
+	fprintf(fp, "S_i,S_t,S_x,S_i,S_t,S_min,period\n");           //x
 	for (i = 0; i < n_S; i++) {
 		idx = (int) S_i[i];
 		idx_min = (int) S_min[i];
+		idx_next = (int) S_i[i+1];
+		//((i+1)!=n_S)? period = t[idx_next]- t[idx]: period;
 		fprintf(fp, "%d,%20.10lf,%lf,%d,%20.10lf,%lf\n",
 				idx,
 				t[idx],
-				x[idx],			//x
+				x_ac[idx],			//x
 				idx_min,
 				t[idx_min],
-                                x[idx_min]                          /////
+                                x_ac[idx_min]                          /////
+				//period
 		       );
 	}
 	fclose(fp);

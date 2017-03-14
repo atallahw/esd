@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <mraa/i2c.h>
+#include <unistd.h>
 #include <signal.h>
 #include "LSM9DS0.h"
 #include <sys/time.h>
@@ -71,7 +72,8 @@ int main() {
 		
 	
 		fprintf(log, "%lf, %lf, %f, %f, %f, %f, %f, %f\n", start_epoch, end_epoch, ax, ay, az, gx, gy, gz);
-
+		
+		usleep(10);
 	}	
 
 	fclose(log);

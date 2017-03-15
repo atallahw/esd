@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <mraa/aio.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "floatfann.h"
 
 int main()
@@ -24,13 +25,13 @@ int main()
 	}
     
     
-    while (read = getline(&len, &line, data) != -1) {N_SAMPLES++;}
+    while ((read = getline(&len, &line, data) != -1)) {N_SAMPLES++;}
     N_SAMPLES = N_SAMPLES / 2;
     rewind(data);
       
     ann = fann_create_from_file("TEST.net");
     i = 0;
-    while (read = getline(&len, &line, data) != -1) {
+    while ((read = getline(&len, &line, data)) != -1) {
 	
 	if (i % 2 == 0){
 		rv = sscanf(line, "%lf, %f, %f\n", input[0], input[1], input[2]);

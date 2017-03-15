@@ -391,7 +391,7 @@ int main(int argc, char **argv)
 				x_ac[idx]/10.0,			//x
 				x_ac[idx_min]/10.0              //x
 				);
-		fprintf(fp,"%d %d %d %d\n",-1,-1,-1,1);
+		fprintf(fp,"%d %d %d %d\n",-1,-1,1,-1);
 	}
 	fclose(fp);
 

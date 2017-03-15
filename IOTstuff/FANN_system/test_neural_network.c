@@ -5,51 +5,59 @@
 
 int main()
 {
-    int i;
-    int temp0, temp1, temp2, location;
+    int i, rv, N_SAMPLES = 0;
+    int temp0, temp1, temp2, speed;
     uint16_t value0, value1, value2;
     float max;
     fann_type *calc_out;
     fann_type input[3];
     struct fann *ann;
-    mraa_aio_context lightsensor0, lightsensor1, lightsensor2;
+    FILE *data;
+    ssize_t read;
+    size_t len = 0;
+    char *line = NULL';
+
+    data = fopen("log.csv", "r");
+    if (data == NULL){
+	fprintf(stderr, "Could not open the input file...Please try again\n");
+        exit(EXIT_FAILURE);
+	}
     
+    
+    while (read = getline(&len, &line, data) != -1) {N_SAMPLES++;}
+    N_SAMPLES = N_SAMPLES / 2;
+    rewind(data);
+      
     ann = fann_create_from_file("TEST.net");
-
-    lightsensor0 = mraa_aio_init(0);
-    lightsensor1 = mraa_aio_init(1);
-    lightsensor2 = mraa_aio_init(2);
-
-    while (1) {
+    i = 0;
+    while (read = getline(&len, &line, data) != -1) {
+	
+	if (i % 2 == 0){
+		rv = sscanf(line, "%lf, %f, %f\n", input[0], input[1], input[2]);
+	}
+		
+	/*	
         temp0 = 0;
         temp1 = 0;
         temp2 = 0;
-        max = -100;
-
-        for (i = 0; i < 50; i++) {
-            temp0 += mraa_aio_read(lightsensor0);
-            temp1 += mraa_aio_read(lightsensor1);
-            temp2 += mraa_aio_read(lightsensor2);
-            usleep(10000);
-        }
-
-        value0 = temp0 / 50;
-        value1 = temp1 / 50;
-        value2 = temp2 / 50;
 
         input[0] = (float) value0 / 1000;
         input[1] = (float) value1 / 1000;
         input[2] = (float) value2 / 1000;
-        calc_out = fann_run(ann, input);
+        */
 
-        for (i = 0; i < 5; i++) {
+	max = -100;
+
+	calc_out = fann_run(ann, input);
+
+        for (i = 0; i < 4; i++) {
             if (calc_out[i] > max) {
                 max = calc_out[i];
-                location = i;
+                speed = i;
             }
         }
 
-	printf("Light sensor values: %d, %d, %d -> location is %d\n", value0, value1, value2, location);
+	printf("Period/Accel/Decel values: %d, %d, %d -> speed is %d\n", value0, value1, value2, location);
         sleep(1);
     }
     fann_destroy(ann);

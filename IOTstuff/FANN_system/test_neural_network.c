@@ -6,7 +6,7 @@
 
 int main()
 {
-    int i, rv, N_SAMPLES = 0;
+    int i, j, rv, N_SAMPLES = 0;
     int temp0, temp1, temp2, speed;
     uint16_t value0, value1, value2;
     float max;
@@ -25,18 +25,18 @@ int main()
 	}
     
     
-    while ((read = getline(&len, &line, data) != -1)) {N_SAMPLES++;}
+    while ((read = getline(&line, &len, data) != -1)) {N_SAMPLES++;}
     N_SAMPLES = N_SAMPLES / 2;
     rewind(data);
       
     ann = fann_create_from_file("TEST.net");
-    i = 0;
-    while ((read = getline(&len, &line, data)) != -1) {
+    j = 0;
+    while ((read = getline(&line, &len, data)) != -1) {
 	
-	if (i % 2 == 0){
+	if (j % 2 == 0){
 		rv = sscanf(line, "%lf, %f, %f\n", input[0], input[1], input[2]);
 	}
-		
+	j++;	
 	/*	
         temp0 = 0;
         temp1 = 0;
@@ -56,9 +56,12 @@ int main()
                 max = calc_out[i];
                 speed = i;
             }
+
+	    usleep(10000);
+		
         }
 
-	printf("Period/Accel/Decel values: %d, %d, %d -> speed is %d\n", value0, value1, value2, location);
+	printf("Period/Accel/Decel values: %d, %d, %d -> speed is %d\n", value0, value1, value2, speed);
         sleep(1);
     }
     fann_destroy(ann);

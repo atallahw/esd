@@ -15,7 +15,7 @@ int main()
     FILE *data;
     ssize_t read;
     size_t len = 0;
-    char *line = NULL';
+    char *line = NULL;
 
     data = fopen("log.csv", "r");
     if (data == NULL){

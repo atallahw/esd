@@ -16,9 +16,7 @@ void do_when_interrupted(int sig)
 		run_flag = 0;
 }
 
-int main() {
-	//printf("test1\n");
-	
+int main() {	
 	
 	mraa_i2c_context accel, gyro;
 	
@@ -71,7 +69,7 @@ int main() {
 		gz = gyro_data.z;
 		
 	
-		fprintf(log, "%lf, %lf, %f, %f, %f, %f, %f, %f\n", start_epoch, end_epoch, ax, ay, az, gx, gy, gz);
+		fprintf(log,"%lf, %lf, %f, %f, %f, %f, %f, %f\n", start_epoch, end_epoch, ax, ay, az, gx, gy, gz);
 		
 		usleep(10);
 	}	
